@@ -4,6 +4,11 @@ pipeline {
 
     agent any
 
+    environment {
+        IMAGE_NAME = "sample-app"
+        IMAGE_TAG = "${BUILD_NUMBER}"
+    }
+
     stages {
 
         stage('Checkout') {
@@ -12,18 +17,23 @@ pipeline {
             }
         }
 
-        stage('Docker Build') {
+        stage('Build Image') {
             steps {
-                buildImage()
+                buildImage(
+                    imageName: env.IMAGE_NAME,
+                    imageTag: env.IMAGE_TAG
+                )
             }
         }
 
-        stage('Security Scan') {
+        stage('Scan Image') {
             steps {
-                scanImage()
+                scanImage(
+                    imageName: env.IMAGE_NAME,
+                    imageTag: env.IMAGE_TAG
+                )
             }
         }
 
     }
-
 }
